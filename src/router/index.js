@@ -1,25 +1,53 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
+import UsersView from '../views/UsersView.vue'
+import ProductsView from '../views/ProductsView.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    redirect: '/users'
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/login',
+    name: 'Login',
+    component: LoginView
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: UsersView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/products',
+    name: 'Products',
+    component: ProductsView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/login'
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+// 🔐 Guard global: protege rutas que requieren login
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('auth_token')
+  const isAuthenticated = !!token
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login')
+  } else if (to.path === '/login' && isAuthenticated) {
+    next('/users')
+  } else {
+    next()
+  }
 })
 
 export default router
