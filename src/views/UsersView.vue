@@ -62,14 +62,8 @@
     </div>
 
     <!-- Modal Crear / Editar -->
-    <div
-      class="modal fade"
-      id="userModal"
-      tabindex="-1"
-      aria-labelledby="userModalLabel"
-      aria-hidden="true"
-      ref="userModal"
-    >
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true"
+      ref="userModal">
       <div class="modal-dialog">
         <div class="modal-content">
           <form @submit.prevent="saveUser">
@@ -94,19 +88,17 @@
               </div>
               <div class="mb-3">
                 <label class="form-label">Contraseña</label>
-                <input
-                  v-model="form.password"
-                  type="password"
-                  class="form-control"
-                  :required="!isEditMode"
-                />
+                <input v-model="form.password" type="password" class="form-control" :required="!isEditMode" />
                 <small class="text-muted" v-if="isEditMode">
                   Deja en blanco para mantener la contraseña actual.
                 </small>
               </div>
               <div class="mb-3">
                 <label class="form-label">Rol</label>
-                <input v-model="form.role" type="text" class="form-control" required />
+                <select v-model="form.role" class="form-select" required>
+                  <option value="Admin">Admin</option>
+                  <option value="User">User</option>
+                </select>
               </div>
               <div class="mb-3">
                 <label class="form-label">Estado</label>
@@ -117,12 +109,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-                :disabled="saving"
-              >
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" :disabled="saving">
                 Cerrar
               </button>
               <button type="submit" class="btn btn-primary" :disabled="saving">
@@ -136,13 +123,7 @@
     </div>
 
     <!-- Modal confirmar eliminación -->
-    <div
-      class="modal fade"
-      id="deleteModal"
-      tabindex="-1"
-      aria-hidden="true"
-      ref="deleteModal"
-    >
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true" ref="deleteModal">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -154,12 +135,7 @@
             <strong>{{ selectedUser?.name }} {{ selectedUser?.lastname }}</strong>?
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-              :disabled="deleting"
-            >
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" :disabled="deleting">
               Cancelar
             </button>
             <button type="button" class="btn btn-danger" @click="deleteUserConfirm" :disabled="deleting">
@@ -197,9 +173,10 @@ export default {
         lastname: '',
         email: '',
         password: '',
-        role: '',
+        role: 'User',
         state: 'Activo'
       },
+
       selectedUser: null,
       alert: {
         message: '',
@@ -242,11 +219,12 @@ export default {
         lastname: '',
         email: '',
         password: '',
-        role: '',
+        role: 'User',
         state: 'Activo'
       }
       this.userModalInstance.show()
     },
+
     openEditModal(user) {
       this.isEditMode = true
       this.form = {
@@ -260,6 +238,7 @@ export default {
       }
       this.userModalInstance.show()
     },
+
     async saveUser() {
       this.saving = true
       try {

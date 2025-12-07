@@ -1,5 +1,7 @@
+// src/services/authService.js
 import api from './api'
 
+// LOGIN contra MockAPI (endpoint /Usuarios)
 export async function login(email, password) {
   const { data: users } = await api.get('/Usuarios')
 
@@ -11,6 +13,7 @@ export async function login(email, password) {
     throw new Error('Credenciales inválidas')
   }
 
+  // Bloquear usuarios inactivos
   if (user.state !== 'Activo') {
     throw new Error('El usuario está inactivo. Contacte al administrador.')
   }
@@ -21,4 +24,16 @@ export async function login(email, password) {
   localStorage.setItem('current_user', JSON.stringify(user))
 
   return user
+}
+
+// Cerrar sesión
+export function logout() {
+  localStorage.removeItem('auth_token')
+  localStorage.removeItem('current_user')
+}
+
+// 🔹 ESTA es la función que necesitaba el router
+export function getCurrentUser() {
+  const json = localStorage.getItem('current_user')
+  return json ? JSON.parse(json) : null
 }

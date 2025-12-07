@@ -48,6 +48,12 @@
           </form>
         </div>
       </div>
+
+      <!-- Texto de registro -->
+      <p class="text-center mt-3">
+        ¿No tienes cuenta?
+        <router-link to="/register">Regístrate</router-link>
+      </p>
     </div>
   </div>
 </template>
@@ -76,8 +82,14 @@ export default {
 
       this.loading = true
       try {
-        await login(this.email, this.password)
-        this.$router.push('/users')
+        const user = await login(this.email, this.password)
+        const role = user.role ? user.role.toLowerCase() : ''
+
+        if (role === 'admin') {
+          this.$router.push('/users')
+        } else {
+          this.$router.push('/shop')
+        }
       } catch (e) {
         this.error = e.message || 'Error al iniciar sesión.'
       } finally {
@@ -87,4 +99,3 @@ export default {
   }
 }
 </script>
-
