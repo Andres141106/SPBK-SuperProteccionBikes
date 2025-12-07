@@ -1,7 +1,6 @@
 // src/services/productService.js
 import api from './api'
 
-// IMPORTANTE: usamos /Productos con P mayúscula
 export function getProducts() {
   return api.get('/Productos')
 }

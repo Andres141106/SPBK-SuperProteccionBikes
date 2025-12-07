@@ -11,7 +11,6 @@ export async function login(email, password) {
     throw new Error('Credenciales inválidas')
   }
 
-  // 👇 Nueva validación: solo permite usuarios activos
   if (user.state !== 'Activo') {
     throw new Error('El usuario está inactivo. Contacte al administrador.')
   }

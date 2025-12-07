@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
-// Estilos propios (si quieres luego los usamos)
+
 import './assets/main.css'
 
 createApp(App)

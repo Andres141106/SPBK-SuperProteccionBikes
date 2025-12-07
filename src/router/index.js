@@ -36,7 +36,6 @@ const router = createRouter({
   routes
 })
 
-// 🔐 Guard global: protege rutas que requieren login
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('auth_token')
   const isAuthenticated = !!token

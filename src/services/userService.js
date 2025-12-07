@@ -1,7 +1,6 @@
 // src/services/userService.js
 import api from './api'
 
-// IMPORTANTE: usamos /Usuarios con U mayúscula
 export function getUsers() {
   return api.get('/Usuarios')
 }
