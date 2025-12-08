@@ -1,74 +1,103 @@
 <template>
   <div>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3>
-        <i class="bi bi-box-seam me-2"></i> Gestión de productos
-      </h3>
-      <button class="btn btn-success" @click="openCreateModal">
-        <i class="bi bi-plus-lg me-1"></i> Nuevo producto
-      </button>
+    <!-- Encabezado de administración -->
+    <div class="page-header mb-5">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="mb-0">
+            <i class="bi bi-box-seam" style="color: #dc143c;"></i> Gestión de Productos
+          </h1>
+          <p class="mb-0 mt-2" style="color: rgba(255,255,255,0.8);">
+            <i class="bi bi-tools"></i> Administra el catálogo de protecciones
+          </p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <button class="btn btn-primary btn-lg" @click="openCreateModal">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo Producto
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Alertas -->
-    <div v-if="alert.message" :class="['alert', alert.type]" role="alert">
+    <div v-if="alert.message" :class="['alert', alert.type, 'alert-dismissible', 'fade', 'show']" role="alert">
+      <i class="bi bi-info-circle me-2"></i>
       {{ alert.message }}
+      <button type="button" class="btn-close" @click="alert.message = ''"></button>
     </div>
 
     <!-- Tabla de productos -->
-    <div class="card shadow-sm">
+    <div class="card shadow-lg">
       <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-          <thead class="table-light">
-            <tr>
-              <th>#</th>
-              <th>Imagen</th>
-              <th>Nombre</th>
-              <th>Marca</th>
-              <th>Categoría</th>
-              <th>Precio</th>
-              <th>Stock</th>
-              <th>Estado</th>
-              <th class="text-end">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="loading">
-              <td colspan="9" class="text-center py-4">
-                Cargando productos...
-              </td>
-            </tr>
-            <tr v-else-if="products.length === 0">
-              <td colspan="9" class="text-center py-4">
-                No hay productos registrados.
-              </td>
-            </tr>
-            <tr v-else v-for="(product, index) in products" :key="product.id">
-              <td>{{ index + 1 }}</td>
-              <td>
-                <img
-                  :src="product.imageUrl || defaultImage"
-                  alt="Imagen producto"
-                  class="img-thumbnail"
-                  style="width: 60px; height: 60px; object-fit: cover"
-                />
-              </td>
-              <td>{{ product.name }}</td>
-              <td>{{ product.brand }}</td>
-              <td>{{ product.category }}</td>
-              <td>{{ product.price }}</td>
-              <td>{{ product.stock }}</td>
-              <td>{{ product.state }}</td>
-              <td class="text-end">
-                <button class="btn btn-sm btn-primary me-2" @click="openEditModal(product)">
-                  <i class="bi bi-pencil-square"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" @click="confirmDelete(product)">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">#</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Imagen</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Nombre</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Marca</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Categoría</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Precio</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Stock</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Estado</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none; text-align: end;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="loading" class="text-center">
+                <td colspan="9" class="py-5">
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                  </div>
+                  <p class="mt-2 text-muted">Cargando productos...</p>
+                </td>
+              </tr>
+              <tr v-else-if="products.length === 0" class="text-center">
+                <td colspan="9" class="py-5">
+                  <i class="bi bi-inbox" style="font-size: 2rem; color: #dc143c;"></i>
+                  <p class="mt-2 text-muted">No hay productos registrados.</p>
+                </td>
+              </tr>
+              <tr v-else v-for="(product, index) in products" :key="product.id">
+                <td class="fw-bold" style="color: #dc143c;">{{ index + 1 }}</td>
+                <td>
+                  <img
+                    :src="product.imageUrl || defaultImage"
+                    alt="Imagen producto"
+                    class="img-thumbnail rounded"
+                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #dc143c !important;"
+                  />
+                </td>
+                <td class="fw-bold">{{ product.name }}</td>
+                <td>{{ product.brand }}</td>
+                <td>
+                  <span class="badge bg-light text-dark">{{ product.category }}</span>
+                </td>
+                <td class="fw-bold" style="color: #dc143c;">{{ formatCurrency(product.price) }}</td>
+                <td>
+                  <span class="badge" :class="product.stock > 0 ? 'bg-success' : 'bg-danger'">
+                    {{ product.stock }} unidades
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" :class="product.state === 'Activo' ? 'bg-success' : 'bg-secondary'">
+                    <i :class="product.state === 'Activo' ? 'bi bi-check-circle me-1' : 'bi bi-x-circle me-1'"></i>
+                    {{ product.state }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-primary me-2" @click="openEditModal(product)" title="Editar">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" @click="confirmDelete(product)" title="Eliminar">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -81,80 +110,109 @@
       aria-hidden="true"
       ref="productModal"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <form @submit.prevent="saveProduct">
-            <div class="modal-header">
+            <div class="modal-header" style="background: linear-gradient(135deg, #dc143c 0%, #1a1a1a 100%); color: white; border: none;">
               <h5 class="modal-title" id="productModalLabel">
-                {{ isEditMode ? 'Editar producto' : 'Nuevo producto' }}
+                <i :class="isEditMode ? 'bi bi-pencil-square me-2' : 'bi bi-plus-circle me-2'"></i>
+                {{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}
               </h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input v-model="form.name" type="text" class="form-control" required />
+            <div class="modal-body p-4">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-box-seam me-1" style="color: #dc143c;"></i>Nombre
+                  </label>
+                  <input v-model="form.name" type="text" class="form-control" placeholder="Ej: Casco Protector" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-tag-fill me-1" style="color: #dc143c;"></i>Marca
+                  </label>
+                  <input v-model="form.brand" type="text" class="form-control" placeholder="Ej: BrandX" required />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-folder-fill me-1" style="color: #dc143c;"></i>Categoría
+                  </label>
+                  <input v-model="form.category" type="text" class="form-control" placeholder="Ej: Cascos" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-wallet2 me-1" style="color: #dc143c;"></i>Precio (COP)
+                  </label>
+                  <input
+                    v-model="form.price"
+                    type="number"
+                    min="0"
+                    step="1000"
+                    class="form-control"
+                    placeholder="0"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-box-seam-fill me-1" style="color: #dc143c;"></i>Stock
+                  </label>
+                  <input
+                    v-model="form.stock"
+                    type="number"
+                    min="0"
+                    class="form-control"
+                    placeholder="0"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-power me-1" style="color: #dc143c;"></i>Estado
+                  </label>
+                  <select v-model="form.state" class="form-select" required>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                  </select>
+                </div>
               </div>
               <div class="mb-3">
-                <label class="form-label">Marca</label>
-                <input v-model="form.brand" type="text" class="form-control" required />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Categoría</label>
-                <input v-model="form.category" type="text" class="form-control" required />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Precio</label>
-                <input
-                  v-model="form.price"
-                  type="number"
-                  min="0"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Stock</label>
-                <input
-                  v-model="form.stock"
-                  type="number"
-                  min="0"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">URL de imagen</label>
+                <label class="form-label fw-bold">
+                  <i class="bi bi-image me-1" style="color: #dc143c;"></i>URL de Imagen
+                </label>
                 <input
                   v-model="form.imageUrl"
                   type="url"
                   class="form-control"
-                  placeholder="https://..."
+                  placeholder="https://ejemplo.com/imagen.jpg"
                 />
                 <small class="text-muted">
-                  Pegue aquí la URL de la imagen del producto.
+                  Pegue la URL completa de la imagen del producto.
                 </small>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <select v-model="form.state" class="form-select" required>
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
-              </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="background-color: #f8f9fa;">
               <button
                 type="button"
                 class="btn btn-secondary"
                 data-bs-dismiss="modal"
                 :disabled="saving"
               >
-                Cerrar
+                <i class="bi bi-x-circle me-1"></i>Cancelar
               </button>
               <button type="submit" class="btn btn-primary" :disabled="saving">
-                <span v-if="!saving">Guardar</span>
-                <span v-else>Guardando...</span>
+                <span v-if="!saving">
+                  <i class="bi bi-check-circle me-1"></i>Guardar
+                </span>
+                <span v-else>
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Guardando...
+                </span>
               </button>
             </div>
           </form>
@@ -172,22 +230,27 @@
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Eliminar producto</h5>
+          <div class="modal-header" style="background-color: #f8d7da; border: none;">
+            <h5 class="modal-title text-danger">
+              <i class="bi bi-exclamation-triangle me-2"></i>Eliminar Producto
+            </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <div class="modal-body">
-            ¿Seguro que deseas eliminar el producto
-            <strong>{{ selectedProduct?.name }}</strong>?
+          <div class="modal-body py-4">
+            <p class="mb-0">
+              ¿Estás seguro de que deseas eliminar el producto
+              <strong style="color: #dc143c;">{{ selectedProduct?.name }}</strong>?
+            </p>
+            <p class="text-muted mt-2 mb-0"><small>Esta acción no se puede deshacer.</small></p>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer" style="background-color: #f8f9fa;">
             <button
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
               :disabled="deleting"
             >
-              Cancelar
+              <i class="bi bi-x-circle me-1"></i>Cancelar
             </button>
             <button
               type="button"
@@ -195,8 +258,13 @@
               @click="deleteProductConfirm"
               :disabled="deleting"
             >
-              <span v-if="!deleting">Eliminar</span>
-              <span v-else>Eliminando...</span>
+              <span v-if="!deleting">
+                <i class="bi bi-trash me-1"></i>Eliminar
+              </span>
+              <span v-else>
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Eliminando...
+              </span>
             </button>
           </div>
         </div>
@@ -257,6 +325,13 @@ export default {
       setTimeout(() => {
         this.alert.message = ''
       }, 3000)
+    },
+    formatCurrency(value) {
+      const n = Number(value) || 0
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP'
+      }).format(n)
     },
     async fetchProducts() {
       this.loading = true

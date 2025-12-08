@@ -1,3 +1,115 @@
-body {
-  background-color: #f5f5f5;
+/* ============================================
+   ANIMACIONES Y TRANSICIONES
+   ============================================ */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ============================================
+   APLICAR ANIMACIONES A ELEMENTOS
+   ============================================ */
+.navbar {
+  animation: slideInDown 0.5s ease-out;
+}
+
+.card {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.page-header {
+  animation: slideInDown 0.6s ease-out;
+}
+
+/* ============================================
+   ESTILOS PERSONALIZADOS ADICIONALES
+   ============================================ */
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+/* Scroll personalizado */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dc143c;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b20630;
+}
+
+/* ============================================
+   EFECTO HOVER MEJORADO
+   ============================================ */
+.table tbody tr:hover {
+  box-shadow: inset 5px 0 0 #dc143c;
+}
+
+.badge {
+  transition: all 0.2s ease;
+}
+
+.badge:hover {
+  transform: scale(1.05);
+}
+
+/* ============================================
+   EFECTOS DE ENFOQUE
+   ============================================ */
+.form-control:focus,
+.form-select:focus {
+  border-color: #dc143c !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 20, 60, 0.25) !important;
+}
+
+/* ============================================
+   SOMBRAS Y PROFUNDIDAD
+   ============================================ */
+.shadow-lg {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+  margin-top: auto;
+  border-top: 3px solid #dc143c;
 }

@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- Navbar principal -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          SPBK - SuperProteccionBikes
+        <a class="navbar-brand" href="#/">
+          <i class="bi bi-shield-check me-2"></i>SPBK
         </a>
 
         <button
@@ -12,6 +12,9 @@
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -45,13 +48,18 @@
 
           <!-- Menú DERECHA -->
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li v-if="!isAuthenticated" class="nav-item">
+            <li v-if="!isAuthenticated" class="nav-item me-2">
               <router-link class="nav-link" to="/login">
                 <i class="bi bi-box-arrow-in-right me-1"></i> Login
               </router-link>
             </li>
-            <li v-else class="nav-item d-flex align-items-center">
-              <span class="navbar-text me-2" v-if="currentUserName">
+            <li v-if="!isAuthenticated" class="nav-item">
+              <router-link class="btn btn-primary btn-sm" to="/register">
+                <i class="bi bi-person-plus me-1"></i> Registrarse
+              </router-link>
+            </li>
+            <li v-else class="nav-item d-flex align-items-center gap-2">
+              <span class="navbar-text text-white" v-if="currentUserName">
                 <i class="bi bi-person-circle me-1"></i> {{ currentUserName }}
               </span>
               <button class="btn btn-outline-light btn-sm" @click="logout">
@@ -64,9 +72,20 @@
     </nav>
 
     <!-- Contenido -->
-    <main class="container my-4">
+    <main class="container-fluid">
       <router-view />
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+      <div class="container-fluid">
+        <p class="mb-2">
+          <i class="bi bi-shield-check text-danger"></i>
+          <strong>SPBK - Super Protección Bikes</strong>
+        </p>
+        <p class="mb-0 text-muted">© 2025 Protecciones para Motos. Todos los derechos reservados.</p>
+      </div>
+    </footer>
   </div>
 </template>
 

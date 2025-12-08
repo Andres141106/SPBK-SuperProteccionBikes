@@ -1,120 +1,172 @@
 <template>
   <div>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3>
-        <i class="bi bi-people-fill me-2"></i> Gestión de usuarios
-      </h3>
-      <button class="btn btn-success" @click="openCreateModal">
-        <i class="bi bi-plus-lg me-1"></i> Nuevo usuario
-      </button>
+    <!-- Encabezado de administración -->
+    <div class="page-header mb-5">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="mb-0">
+            <i class="bi bi-people-fill" style="color: #dc143c;"></i> Gestión de Usuarios
+          </h1>
+          <p class="mb-0 mt-2" style="color: rgba(255,255,255,0.8);">
+            <i class="bi bi-shield-lock"></i> Administra los usuarios del sistema
+          </p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <button class="btn btn-primary btn-lg" @click="openCreateModal">
+            <i class="bi bi-person-plus-fill me-2"></i>Nuevo Usuario
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Alertas -->
-    <div v-if="alert.message" :class="['alert', alert.type]" role="alert">
+    <div v-if="alert.message" :class="['alert', alert.type, 'alert-dismissible', 'fade', 'show']" role="alert">
+      <i class="bi bi-info-circle me-2"></i>
       {{ alert.message }}
+      <button type="button" class="btn-close" @click="alert.message = ''"></button>
     </div>
 
     <!-- Tabla de usuarios -->
-    <div class="card shadow-sm">
+    <div class="card shadow-lg">
       <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-          <thead class="table-light">
-            <tr>
-              <th>#</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Correo</th>
-              <th>Rol</th>
-              <th>Estado</th>
-              <th class="text-end">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="loading">
-              <td colspan="7" class="text-center py-4">
-                Cargando usuarios...
-              </td>
-            </tr>
-            <tr v-else-if="users.length === 0">
-              <td colspan="7" class="text-center py-4">
-                No hay usuarios registrados.
-              </td>
-            </tr>
-            <tr v-else v-for="(user, index) in users" :key="user.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.lastname }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.role }}</td>
-              <td>{{ user.state }}</td>
-              <td class="text-end">
-                <button class="btn btn-sm btn-primary me-2" @click="openEditModal(user)">
-                  <i class="bi bi-pencil-square"></i>
-                </button>
-                <button class="btn btn-sm btn-danger" @click="confirmDelete(user)">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">#</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Nombre</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Apellido</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Correo</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Rol</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none;">Estado</th>
+                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border: none; text-align: end;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="loading" class="text-center">
+                <td colspan="7" class="py-5">
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                  </div>
+                  <p class="mt-2 text-muted">Cargando usuarios...</p>
+                </td>
+              </tr>
+              <tr v-else-if="users.length === 0" class="text-center">
+                <td colspan="7" class="py-5">
+                  <i class="bi bi-inbox" style="font-size: 2rem; color: #dc143c;"></i>
+                  <p class="mt-2 text-muted">No hay usuarios registrados.</p>
+                </td>
+              </tr>
+              <tr v-else v-for="(user, index) in users" :key="user.id">
+                <td class="fw-bold" style="color: #dc143c;">{{ index + 1 }}</td>
+                <td class="fw-bold">{{ user.name }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>
+                  <i class="bi bi-envelope me-1" style="color: #dc143c;"></i>{{ user.email }}
+                </td>
+                <td>
+                  <span class="badge" :class="user.role === 'Admin' ? 'bg-danger' : 'bg-info'">
+                    <i :class="user.role === 'Admin' ? 'bi bi-shield-lock me-1' : 'bi bi-person me-1'"></i>
+                    {{ user.role }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" :class="user.state === 'Activo' ? 'bg-success' : 'bg-secondary'">
+                    <i :class="user.state === 'Activo' ? 'bi bi-check-circle me-1' : 'bi bi-x-circle me-1'"></i>
+                    {{ user.state }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-primary me-2" @click="openEditModal(user)" title="Editar">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-sm btn-danger" @click="confirmDelete(user)" title="Eliminar">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
     <!-- Modal Crear / Editar -->
     <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true"
       ref="userModal">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <form @submit.prevent="saveUser">
-            <div class="modal-header">
+            <div class="modal-header" style="background: linear-gradient(135deg, #dc143c 0%, #1a1a1a 100%); color: white; border: none;">
               <h5 class="modal-title" id="userModalLabel">
-                {{ isEditMode ? 'Editar usuario' : 'Nuevo usuario' }}
+                <i :class="isEditMode ? 'bi bi-pencil-square me-2' : 'bi bi-person-plus-fill me-2'"></i>
+                {{ isEditMode ? 'Editar Usuario' : 'Nuevo Usuario' }}
               </h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input v-model="form.name" type="text" class="form-control" required />
+            <div class="modal-body p-4">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-person me-1" style="color: #dc143c;"></i>Nombre
+                  </label>
+                  <input v-model="form.name" type="text" class="form-control" placeholder="Juan" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-person me-1" style="color: #dc143c;"></i>Apellido
+                  </label>
+                  <input v-model="form.lastname" type="text" class="form-control" placeholder="Pérez" required />
+                </div>
               </div>
               <div class="mb-3">
-                <label class="form-label">Apellido</label>
-                <input v-model="form.lastname" type="text" class="form-control" required />
+                <label class="form-label fw-bold">
+                  <i class="bi bi-envelope me-1" style="color: #dc143c;"></i>Correo Electrónico
+                </label>
+                <input v-model="form.email" type="email" class="form-control" placeholder="usuario@email.com" required />
               </div>
               <div class="mb-3">
-                <label class="form-label">Correo</label>
-                <input v-model="form.email" type="email" class="form-control" required />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Contraseña</label>
-                <input v-model="form.password" type="password" class="form-control" :required="!isEditMode" />
+                <label class="form-label fw-bold">
+                  <i class="bi bi-lock me-1" style="color: #dc143c;"></i>Contraseña
+                </label>
+                <input v-model="form.password" type="password" class="form-control" placeholder="••••••••" :required="!isEditMode" />
                 <small class="text-muted" v-if="isEditMode">
-                  Deja en blanco para mantener la contraseña actual.
+                  <i class="bi bi-info-circle me-1"></i>Deja en blanco para mantener la contraseña actual.
                 </small>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Rol</label>
-                <select v-model="form.role" class="form-select" required>
-                  <option value="Admin">Admin</option>
-                  <option value="User">User</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <select v-model="form.state" class="form-select" required>
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
-                </select>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-shield-lock me-1" style="color: #dc143c;"></i>Rol
+                  </label>
+                  <select v-model="form.role" class="form-select" required>
+                    <option value="Admin">Admin</option>
+                    <option value="User">Usuario</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">
+                    <i class="bi bi-power me-1" style="color: #dc143c;"></i>Estado
+                  </label>
+                  <select v-model="form.state" class="form-select" required>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                  </select>
+                </div>
               </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="background-color: #f8f9fa;">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" :disabled="saving">
-                Cerrar
+                <i class="bi bi-x-circle me-1"></i>Cancelar
               </button>
               <button type="submit" class="btn btn-primary" :disabled="saving">
-                <span v-if="!saving">Guardar</span>
-                <span v-else>Guardando...</span>
+                <span v-if="!saving">
+                  <i class="bi bi-check-circle me-1"></i>Guardar
+                </span>
+                <span v-else>
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Guardando...
+                </span>
               </button>
             </div>
           </form>
@@ -126,21 +178,31 @@
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true" ref="deleteModal">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Eliminar usuario</h5>
+          <div class="modal-header" style="background-color: #f8d7da; border: none;">
+            <h5 class="modal-title text-danger">
+              <i class="bi bi-exclamation-triangle me-2"></i>Eliminar Usuario
+            </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <div class="modal-body">
-            ¿Seguro que deseas eliminar al usuario
-            <strong>{{ selectedUser?.name }} {{ selectedUser?.lastname }}</strong>?
+          <div class="modal-body py-4">
+            <p class="mb-0">
+              ¿Estás seguro de que deseas eliminar al usuario
+              <strong style="color: #dc143c;">{{ selectedUser?.name }} {{ selectedUser?.lastname }}</strong>?
+            </p>
+            <p class="text-muted mt-2 mb-0"><small>Esta acción no se puede deshacer.</small></p>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer" style="background-color: #f8f9fa;">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" :disabled="deleting">
-              Cancelar
+              <i class="bi bi-x-circle me-1"></i>Cancelar
             </button>
             <button type="button" class="btn btn-danger" @click="deleteUserConfirm" :disabled="deleting">
-              <span v-if="!deleting">Eliminar</span>
-              <span v-else>Eliminando...</span>
+              <span v-if="!deleting">
+                <i class="bi bi-trash me-1"></i>Eliminar
+              </span>
+              <span v-else>
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Eliminando...
+              </span>
             </button>
           </div>
         </div>

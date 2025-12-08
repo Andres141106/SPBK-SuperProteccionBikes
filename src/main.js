@@ -8,6 +8,8 @@ import 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 
+import './assets/styles.css'
+
 import './assets/main.css'
 
 createApp(App)
