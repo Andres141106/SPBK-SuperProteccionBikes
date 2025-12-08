@@ -206,9 +206,10 @@ El flujo de roles (Admin/User) permite un sistema adaptable a escenarios reales.
 
 🧑‍💻 Autores
 
-Andrés Felipe Carrascal Gomez  — front-End-diseño
+Andrés Felipe Carrascal Gomez 
+(192321) — front-End-diseño
 
-Franklin Mauricio Hernandez Galvis (192326)-front-End-diseño 
+Franklin Mauricio Hernandez Galvis (192326) - front-End-diseño 
 
 ## Project setup
 ```
