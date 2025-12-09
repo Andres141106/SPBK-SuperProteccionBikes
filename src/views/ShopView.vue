@@ -172,6 +172,18 @@ export default {
         this.productDetailModalInstance = new Modal(this.$refs.productDetailModal)
     },
     methods: {
+        // Generar link de WhatsApp con NOMBRE, PRECIO y CATEGORÍA (sin stock)
+        getWhatsAppLink(product) {
+            const phone = '573156802984' 
+            const message = `Hola, estoy interesado en el siguiente producto:
+🛒 *${product.name}*
+💰 Precio: ${this.formatCurrency(product.price)}
+📂 Categoría: ${product.category}
+
+¿Está disponible?`
+            return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+        },
+
         showAlert(message, type = 'alert-success') {
             this.alert.message = message
             this.alert.type = type
@@ -179,12 +191,13 @@ export default {
                 this.alert.message = ''
             }, 3000)
         },
+
         async fetchProducts() {
             this.loading = true
             try {
                 const { data } = await getProducts()
 
-                // 👇 Solo productos activos
+                // Solo productos activos
                 this.products = data.filter((p) => {
                     const state = p.state ? p.state.toString().toLowerCase() : ''
                     return state === 'activo'
@@ -195,10 +208,12 @@ export default {
                 this.loading = false
             }
         },
+
         openProduct(product) {
             this.selectedProduct = product
             this.productDetailModalInstance.show()
         },
+
         formatCurrency(value) {
             const n = Number(value) || 0
             return new Intl.NumberFormat('es-CO', {
@@ -206,17 +221,18 @@ export default {
                 currency: 'COP'
             }).format(n)
         },
+
+        //  Al comprar → abrir WhatsApp
         async buyProduct() {
             if (!this.selectedProduct) return
             this.processingPurchase = true
+
             try {
-                // Aquí podrías hacer lógica real de compra (API, etc.)
-                // Por ahora solo simulamos:
-                await new Promise((resolve) => setTimeout(resolve, 800))
-                this.showAlert(
-                    `Compra realizada de "${this.selectedProduct.name}" (simulada).`,
-                    'alert-success'
-                )
+                await new Promise((resolve) => setTimeout(resolve, 300))
+
+                const url = this.getWhatsAppLink(this.selectedProduct)
+                window.open(url, '_blank') // Abre WhatsApp en nueva pestaña
+
                 this.productDetailModalInstance.hide()
             } catch (e) {
                 this.showAlert('Error al procesar la compra', 'alert-danger')
@@ -227,3 +243,4 @@ export default {
     }
 }
 </script>
+
